@@ -66,8 +66,8 @@ func initRouter() *gin.Engine {
 			articles.POST("/", h.CreateArticle)
 			articles.GET("/", h.GetAllArticles)
 			articles.GET("/:id", h.GetArticleById)
-			articles.GET("/:id", h.UpdateArticle)
-			articles.GET("/:id", h.DeleteArticle)
+			articles.PUT("/:id", h.UpdateArticle)
+			articles.DELETE("/:id", h.DeleteArticle)
 		}
 	}
 
