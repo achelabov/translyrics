@@ -1,7 +1,8 @@
 package models
 
 type Article struct {
-	ID            string
-	AutorUsername string
-	Title         string
+	ID     string
+	UserID string
+	Title  string
+	Text   string
 }
