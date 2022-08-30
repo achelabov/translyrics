@@ -19,7 +19,7 @@ func NewArticleLocalStorage() *ArticleLocalStorage {
 	}
 }
 
-func (s *ArticleLocalStorage) CreateArticle(ctx context.Context, user *models.User, article *models.Article) error {
+func (s *ArticleLocalStorage) CreateArticle(ctx context.Context, article *models.Article, user *models.User) error {
 	article.UserID = user.ID
 
 	s.mutex.Lock()
@@ -55,7 +55,7 @@ func (s *ArticleLocalStorage) GetArticlesByUserID(ctx context.Context, user *mod
 	return articles, nil
 }
 
-func (s *ArticleLocalStorage) GetArticlesByID(ctx context.Context, id string) (*models.Article, error) {
+func (s *ArticleLocalStorage) GetArticleByID(ctx context.Context, id string) (*models.Article, error) {
 	return s.articles[id], nil
 }
 

@@ -6,7 +6,7 @@ auth:
   token_ttl: 86400
 
 mongo:
-  uri: "mongodb://mongodb:27017"
-  name: "articlesDatabase"
+  uri: "mongodb+srv://admin:admin@cluster0.kxcxjb3.mongodb.net/?retryWrites=true&w=majority"
+  name: "translyricsdb"
   user_collection: "users"
-  article_collection: "article"
+  article_collection: "articles"

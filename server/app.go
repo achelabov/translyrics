@@ -9,17 +9,28 @@ import (
 	"time"
 
 	h "github.com/achelabov/translyrics/controllers/handlers"
+	"github.com/achelabov/translyrics/database"
+	articlemongo "github.com/achelabov/translyrics/database/mongo"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type App struct {
 	httpServer *http.Server
+
+	article database.ArticleStorage
+	auth    database.UserStorage
 }
 
 func NewApp() *App {
-	//	TODO init db here
+	db := initDB()
 
-	return &App{}
+	return &App{
+		article: articlemongo.NewArticleMongoStorage(db, viper.GetString("mongo.article_collection")),
+		//		auth:    ls.NewUserLocalStorage(),
+	}
 }
 
 func (a *App) Run(port string) error {
@@ -72,4 +83,26 @@ func initRouter() *gin.Engine {
 	}
 
 	return router
+}
+
+func initDB() *mongo.Database {
+	client, err := mongo.NewClient(options.Client().ApplyURI(viper.GetString("mongo.uri")))
+	if err != nil {
+		log.Fatalf("Error occured while establishing connection to mongoDB")
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err = client.Connect(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = client.Ping(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return client.Database(viper.GetString("mongo.name"))
 }
