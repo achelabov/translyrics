@@ -10,7 +10,7 @@ import (
 
 	h "github.com/achelabov/translyrics/controllers/handlers"
 	"github.com/achelabov/translyrics/database"
-	articlemongo "github.com/achelabov/translyrics/database/mongo"
+	mdb "github.com/achelabov/translyrics/database/mongo"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,8 +28,8 @@ func NewApp() *App {
 	db := initDB()
 
 	return &App{
-		article: articlemongo.NewArticleMongoStorage(db, viper.GetString("mongo.article_collection")),
-		//		auth:    ls.NewUserLocalStorage(),
+		article: mdb.NewArticleMongoStorage(db, viper.GetString("mongo.article_collection")),
+		auth:    mdb.NewUserMongoStorage(db, viper.GetString("mongo.user_collection")),
 	}
 }
 
