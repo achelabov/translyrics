@@ -111,7 +111,9 @@ func (s *ArticleMongoStorage) GetArticleByID(ctx context.Context, id string) (*m
 }
 
 //TODO
-func (s *ArticleMongoStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error
+func (s *ArticleMongoStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error {
+	return nil
+}
 
 func (s *ArticleMongoStorage) DeleteArticle(ctx context.Context, user *models.User, id string) error {
 	objID, _ := primitive.ObjectIDFromHex(id)

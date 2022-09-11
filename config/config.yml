@@ -1,12 +1,12 @@
 port: 8080
 
+mongo:
+  uri: "mongodb://127.0.0.1:27017/"
+  name: "translyricsdb"
+  user_collection: "users"
+  article_collection: "articles"
+
 auth:
   hash_salt: "hash_salt"
   signing_key: "signing_key"
   token_ttl: 86400
-
-mongo:
-  uri: "mongodb+srv://admin:admin@cluster0.kxcxjb3.mongodb.net/?retryWrites=true&w=majority"
-  name: "translyricsdb"
-  user_collection: "users"
-  article_collection: "articles"

@@ -56,7 +56,10 @@ func (s *ArticleLocalStorage) GetArticlesByUserID(ctx context.Context, user *mod
 }
 
 func (s *ArticleLocalStorage) GetArticleByID(ctx context.Context, id string) (*models.Article, error) {
-	return s.articles[id], nil
+	s.mutex.Lock()
+	article := s.articles[id]
+	s.mutex.Unlock()
+	return article, nil
 }
 
 func (s *ArticleLocalStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error {
@@ -67,7 +70,7 @@ func (s *ArticleLocalStorage) UpdateArticle(ctx context.Context, newArticle *mod
 	return nil
 }
 
-func (s *ArticleLocalStorage) DeleteArticle(ctx context.Context, id string) error {
+func (s *ArticleLocalStorage) DeleteArticle(ctx context.Context, user *models.User, id string) error {
 	s.mutex.Lock()
 	delete(s.articles, id)
 	s.mutex.Unlock()

@@ -8,28 +8,20 @@ import (
 	"os/signal"
 	"time"
 
-	h "github.com/achelabov/translyrics/controllers/handlers"
+	handler "github.com/achelabov/translyrics/controllers"
 	"github.com/achelabov/translyrics/database"
-	mdb "github.com/achelabov/translyrics/database/mongo"
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type App struct {
 	httpServer *http.Server
 
-	article database.ArticleStorage
-	auth    database.UserStorage
+	db database.DatabaseAccess
 }
 
 func NewApp() *App {
-	db := initDB()
-
 	return &App{
-		article: mdb.NewArticleMongoStorage(db, viper.GetString("mongo.article_collection")),
-		auth:    mdb.NewUserMongoStorage(db, viper.GetString("mongo.user_collection")),
+		db: *database.MongoAccess,
 	}
 }
 
@@ -66,43 +58,21 @@ func initRouter() *gin.Engine {
 
 	auth := router.Group("/auth")
 	{
-		auth.POST("/sign-in", h.SignIn)
-		auth.POST("/sign-up", h.SignUp)
+		auth.POST("/sign-in", handler.SignIn)
+		auth.POST("/sign-up", handler.SignUp)
 	}
 
 	api := router.Group("/api")
 	{
 		articles := api.Group("/articles")
 		{
-			articles.POST("/", h.CreateArticle)
-			articles.GET("/", h.GetAllArticles)
-			articles.GET("/:id", h.GetArticleById)
-			articles.PUT("/:id", h.UpdateArticle)
-			articles.DELETE("/:id", h.DeleteArticle)
+			articles.POST("/", handler.CreateArticle)
+			articles.GET("/", handler.GetAllArticles)
+			articles.GET("/:id", handler.GetArticleById)
+			articles.PUT("/:id", handler.UpdateArticle)
+			articles.DELETE("/:id", handler.DeleteArticle)
 		}
 	}
 
 	return router
-}
-
-func initDB() *mongo.Database {
-	client, err := mongo.NewClient(options.Client().ApplyURI(viper.GetString("mongo.uri")))
-	if err != nil {
-		log.Fatalf("Error occured while establishing connection to mongoDB")
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = client.Ping(context.Background(), nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return client.Database(viper.GetString("mongo.name"))
 }

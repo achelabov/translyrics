@@ -53,7 +53,9 @@ func (s *UserMongoStorage) GetUser(ctx context.Context, username, password strin
 }
 
 //TODO
-func (s *UserMongoStorage) DeleteUser(ctx context.Context, id string) error
+func (s *UserMongoStorage) DeleteUser(ctx context.Context, id string) error {
+	return nil
+}
 
 func toMongoUser(u *models.User) *User {
 	return &User{

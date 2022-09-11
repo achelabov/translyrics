@@ -10,8 +10,8 @@ type ArticleStorage interface {
 	CreateArticle(ctx context.Context, article *models.Article, user *models.User) error
 	GetArticles(ctx context.Context) ([]*models.Article, error)
 	GetArticlesByUserID(ctx context.Context, user *models.User) ([]*models.Article, error)
-	//	GetArticleByID(ctx context.Context, id string) (*models.Article, error)
-	//	UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error
+	GetArticleByID(ctx context.Context, id string) (*models.Article, error)
+	UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error
 	DeleteArticle(ctx context.Context, user *models.User, id string) error
 }
 
