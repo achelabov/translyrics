@@ -35,7 +35,7 @@ func CreateArticle(ctx *gin.Context) {
 
 func GetAllArticles(ctx *gin.Context) {
 	articles, err := dbArticles.GetArticles(ctx.Request.Context())
-	if err == nil {
+	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
