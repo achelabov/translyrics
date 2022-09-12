@@ -38,18 +38,17 @@ func (s *UserMongoStorage) CreateUser(ctx context.Context, user *models.User) er
 	return nil
 }
 
-func (s *UserMongoStorage) GetUser(ctx context.Context, username, password string) (*models.User, error) {
+func (s *UserMongoStorage) GetUser(ctx context.Context, username string) (*models.User, error) {
 	user := new(User)
 
 	err := s.db.FindOne(ctx, bson.M{
 		"username": username,
-		"password": password,
 	}).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
 
-	return toModel(user), nil
+	return toModelUser(user), nil
 }
 
 //TODO
@@ -65,7 +64,7 @@ func toMongoUser(u *models.User) *User {
 	}
 }
 
-func toModel(u *User) *models.User {
+func toModelUser(u *User) *models.User {
 	return &models.User{
 		ID:       u.ID.Hex(),
 		Username: u.Username,

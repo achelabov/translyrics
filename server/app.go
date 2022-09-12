@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/achelabov/translyrics/config"
 	handler "github.com/achelabov/translyrics/controllers"
 	"github.com/achelabov/translyrics/database"
 	"github.com/gin-gonic/gin"
@@ -27,7 +28,7 @@ func NewApp() *App {
 
 func (a *App) Run(port string) error {
 	router := initRouter()
-
+	var _ = config.Init()
 	a.httpServer = &http.Server{
 		Addr:           ":" + port,
 		Handler:        router,

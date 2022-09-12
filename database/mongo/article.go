@@ -30,15 +30,7 @@ func NewArticleMongoStorage(db *mongo.Database, collection string) *ArticleMongo
 func (s *ArticleMongoStorage) CreateArticle(ctx context.Context, article *models.Article, user *models.User) error {
 	article.UserID = user.ID
 
-	res, err := s.db.InsertOne(ctx, func(a *models.Article) *Article {
-		uid, _ := primitive.ObjectIDFromHex(a.UserID)
-
-		return &Article{
-			UserID: uid,
-			Title:  a.Title,
-			Text:   a.Text,
-		}
-	}(article))
+	res, err := s.db.InsertOne(ctx, toModelArticle(article))
 	if err != nil {
 		return err
 	}
@@ -110,9 +102,18 @@ func (s *ArticleMongoStorage) GetArticleByID(ctx context.Context, id string) (*m
 	return article, nil
 }
 
-//TODO
 func (s *ArticleMongoStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error {
-	return nil
+	objId, _ := primitive.ObjectIDFromHex(id)
+	modelArticle := toModelArticle(newArticle)
+	filter := bson.M{"_id": objId}
+	update := bson.M{"$set": bson.M{
+		"userId": modelArticle.UserID,
+		"title":  modelArticle.Title,
+		"text":   modelArticle.Text}}
+
+	_, err := s.db.UpdateOne(ctx, filter, update)
+
+	return err
 }
 
 func (s *ArticleMongoStorage) DeleteArticle(ctx context.Context, user *models.User, id string) error {
@@ -120,7 +121,18 @@ func (s *ArticleMongoStorage) DeleteArticle(ctx context.Context, user *models.Us
 	uID, _ := primitive.ObjectIDFromHex(user.ID)
 
 	_, err := s.db.DeleteOne(ctx, bson.M{"_id": objID, "userId": uID})
+
 	return err
+}
+
+func toModelArticle(a *models.Article) *Article {
+	uid, _ := primitive.ObjectIDFromHex(a.UserID)
+
+	return &Article{
+		UserID: uid,
+		Title:  a.Title,
+		Text:   a.Text,
+	}
 }
 
 func toArticle(a *Article) *models.Article {

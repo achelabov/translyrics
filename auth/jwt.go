@@ -4,10 +4,13 @@ import (
 	"errors"
 	"time"
 
+	"github.com/achelabov/translyrics/config"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/spf13/viper"
 )
 
-var jwtKey = []byte("secretkey")
+var _ = config.Init()
+var jwtKey = []byte(viper.GetString("auth.signing_key"))
 
 type JWTClaim struct {
 	Username string `json:"username"`
@@ -16,7 +19,7 @@ type JWTClaim struct {
 }
 
 func GenerateJWT(email string, username string) (string, error) {
-	expirationTime := time.Now().Add(1 * time.Hour)
+	expirationTime := time.Now().Add(viper.GetDuration("auth.token_ttl"))
 	claims := &JWTClaim{
 		Email:    email,
 		Username: username,

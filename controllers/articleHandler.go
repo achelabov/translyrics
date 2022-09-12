@@ -7,13 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type jsonInput struct {
+type jsonArticleInput struct {
 	Title string `json:"title"`
 	Text  string `json:"text"`
 }
 
 func CreateArticle(ctx *gin.Context) {
-	inp := new(jsonInput)
+	inp := new(jsonArticleInput)
 	if err := ctx.BindJSON(inp); err != nil {
 		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -44,13 +44,45 @@ func GetAllArticles(ctx *gin.Context) {
 }
 
 func GetArticleById(ctx *gin.Context) {
+	id := ctx.Param("id")
 
+	article, err := dbArticles.GetArticleByID(ctx.Request.Context(), id)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, article)
 }
 
 func UpdateArticle(ctx *gin.Context) {
+	id := ctx.Param("id")
 
+	inp := new(jsonArticleInput)
+	if err := ctx.BindJSON(inp); err != nil {
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	err := dbArticles.UpdateArticle(ctx.Request.Context(),
+		&models.Article{Title: inp.Title, Text: inp.Text}, id)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }
 
 func DeleteArticle(ctx *gin.Context) {
+	id := ctx.Param("id")
 
+	user := ctx.MustGet("user").(*models.User)
+
+	if err := dbArticles.DeleteArticle(ctx.Request.Context(), user, id); err != nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
 }
