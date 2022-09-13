@@ -19,12 +19,12 @@ func CreateArticle(ctx *gin.Context) {
 		return
 	}
 
-	user := ctx.MustGet("user").(*models.User)
+	//	user := ctx.MustGet("user").(*models.User)
 
 	err := dbArticles.CreateArticle(ctx.Request.Context(), &models.Article{
 		Title: inp.Title,
 		Text:  inp.Text,
-	}, user)
+	}, &models.User{ID: "228"})
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return

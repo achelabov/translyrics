@@ -10,6 +10,7 @@ import (
 
 	handler "github.com/achelabov/translyrics/controllers"
 	"github.com/achelabov/translyrics/database"
+	"github.com/achelabov/translyrics/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -66,11 +67,14 @@ func initRouter() *gin.Engine {
 	{
 		articles := api.Group("/articles")
 		{
-			articles.POST("/", handler.CreateArticle)
 			articles.GET("/", handler.GetAllArticles)
 			articles.GET("/:id", handler.GetArticleById)
-			articles.PUT("/:id", handler.UpdateArticle)
-			articles.DELETE("/:id", handler.DeleteArticle)
+			authArticles := articles.Group("").Use(middlewares.Auth)
+			{
+				authArticles.POST("/", handler.CreateArticle)
+				authArticles.PUT("/:id", handler.UpdateArticle)
+				authArticles.DELETE("/:id", handler.DeleteArticle)
+			}
 		}
 	}
 
