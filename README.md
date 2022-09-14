@@ -1,14 +1,12 @@
 # Translyrics
----
 The backend of a simple blogging platform built with golang.
+
 ## Features
-----
 - JWT Authentication
 - MongoDB as a database
 - Gin-gonic as a web framework
 
 ## API
-----
 ### POST /auth/sign-up
 Creates new user
 **Request example**
