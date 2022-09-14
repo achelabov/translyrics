@@ -1,4 +1,4 @@
-# Translyrica
+# Translyrics
 ---
 The backend of a simple blogging platform built with golang.
 ## Features
