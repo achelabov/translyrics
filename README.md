@@ -8,7 +8,7 @@ The backend of a simple blogging platform built with golang.
 
 ## API
 ### POST /auth/sign-up
-Creates new user
+Creates new user <br/>
 **Request example**
 ```
 {
@@ -18,7 +18,7 @@ Creates new user
 }
 ```
 ### POST /auth/sign-in
-Request to get a JWT token by user credentials
+Request to get a JWT token by user credentials <br/>
 **Request example**
 ```
 {
@@ -33,7 +33,7 @@ Request to get a JWT token by user credentials
 }
 ```
 ### GET /api/articles
-Returns all articles
+Returns all articles <br/>
 **Response example**
 ```
 [
@@ -49,7 +49,7 @@ Returns all articles
 ### POST /api/articles
 > Required bearer token
 
-Creates new article
+Creates new article <br/>
 **Request example**
 ```
 {
@@ -58,7 +58,7 @@ Creates new article
 }
 ```
 ### GET /api/articles/:id
-Returns article by id
+Returns article by id <br/>
 **Response example**
 ```
 {
@@ -71,7 +71,7 @@ Returns article by id
 ### PUT /api/articles/:id
 > Required bearer token
 
-Updates article by id
+Updates article by id <br/>
 **Request example**
 ```
 {
