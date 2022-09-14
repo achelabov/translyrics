@@ -62,7 +62,7 @@ func (s *ArticleLocalStorage) GetArticleByID(ctx context.Context, id string) (*m
 	return article, nil
 }
 
-func (s *ArticleLocalStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error {
+func (s *ArticleLocalStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, user *models.User, id string) error {
 	s.mutex.Lock()
 	s.articles[id] = newArticle
 	s.mutex.Unlock()

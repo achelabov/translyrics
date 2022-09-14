@@ -102,12 +102,12 @@ func (s *ArticleMongoStorage) GetArticleByID(ctx context.Context, id string) (*m
 	return article, nil
 }
 
-func (s *ArticleMongoStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, id string) error {
+func (s *ArticleMongoStorage) UpdateArticle(ctx context.Context, newArticle *models.Article, user *models.User, id string) error {
 	objId, _ := primitive.ObjectIDFromHex(id)
 	modelArticle := toModelArticle(newArticle)
 	filter := bson.M{"_id": objId}
 	update := bson.M{"$set": bson.M{
-		"userId": modelArticle.UserID,
+		"userId": user.ID,
 		"title":  modelArticle.Title,
 		"text":   modelArticle.Text}}
 

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/achelabov/translyrics/models"
@@ -36,6 +37,7 @@ func CreateArticle(ctx *gin.Context) {
 func GetAllArticles(ctx *gin.Context) {
 	articles, err := dbArticles.GetArticles(ctx.Request.Context())
 	if err != nil {
+		fmt.Println(err)
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
@@ -64,8 +66,10 @@ func UpdateArticle(ctx *gin.Context) {
 		return
 	}
 
+	//user := ctx.MustGet("user").(*models.User)
+
 	err := dbArticles.UpdateArticle(ctx.Request.Context(),
-		&models.Article{Title: inp.Title, Text: inp.Text}, id)
+		&models.Article{Title: inp.Title, Text: inp.Text}, &models.User{ID: "228"}, id)
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
@@ -77,9 +81,9 @@ func UpdateArticle(ctx *gin.Context) {
 func DeleteArticle(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	user := ctx.MustGet("user").(*models.User)
+	//user := ctx.MustGet("user").(*models.User)
 
-	if err := dbArticles.DeleteArticle(ctx.Request.Context(), user, id); err != nil {
+	if err := dbArticles.DeleteArticle(ctx.Request.Context(), &models.User{ID: "228"}, id); err != nil {
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
